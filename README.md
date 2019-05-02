@@ -1,4 +1,4 @@
-#json-branch-prune
+# json-branch-prune
 
 ### Installation
 ```
