@@ -1,0 +1,24 @@
+{
+  "name": "json-branch-prune",
+  "version": "1.0.0",
+  "description": "Removes branches from a json object which terminate in null, empty strings, empty arrays, or empty objects",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc --reporter=lcov --reporter=cobertura node_modules/.bin/mocha -R spec --recursive --timeout 5000 && npm run-script check-coverage",
+    "check-coverage": "nyc check-coverage --lines 100 --functions 100 --branches 100",
+    "lines": "find . -name '*.test.js' -not -path './node_modules*' -not -path './coverage/*' | xargs wc -l"
+  },
+  "author": "ezbakejustin",
+  "repository": "https://github.com/ezbakejustin/json-branch-prune.git",
+  "license": "ISC",
+  "devDependencies": {
+    "assert": "^1.4.1",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "co-mocha": "^1.2.2",
+    "mocha": "^5.2.0",
+    "nyc": "^14.1.0",
+    "should": "^13.2.3",
+    "sinon": "^7.2.3"
+  }
+}
