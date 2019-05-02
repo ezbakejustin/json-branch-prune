@@ -1,12 +1,10 @@
-const supportedOptions = [null, "", "{}", "[]"];
+const defaultOptions = [null, "", "{}", "[]"];
 
 (() => {
   let options;
   const exec = (input, optionsArray) => {
     if (!optionsArray) {
-      optionsArray = supportedOptions;
-    } else {
-      optionsArray = checkArguments(optionsArray);
+      optionsArray = defaultOptions;
     }
     options = optionsArray;
 
@@ -17,7 +15,9 @@ const supportedOptions = [null, "", "{}", "[]"];
   };
 
   const prune = input => {
-    if (matchesOptions(input)) input = undefined;
+    if (matchesOptions(input)) {
+      input = undefined;
+    }
 
     if (input instanceof Array) {
       input.forEach((item, index) => {
@@ -33,7 +33,7 @@ const supportedOptions = [null, "", "{}", "[]"];
         value = prune(value);
         if (value instanceof Object) {
           value = prune(value);
-          // if (isEmptyObject(value)) value = undefined;
+          if (matchesOptions(value)) value = undefined;
         }
         input[key] = value;
       });
@@ -48,39 +48,8 @@ const supportedOptions = [null, "", "{}", "[]"];
 
   const matchesOptions = input => {
     return (
-      isNull(input) ||
-      isEmptyString(input) ||
-      isEmptyObject(input) ||
-      isEmptyArray(input)
+      options.indexOf(input) > -1 || options.indexOf(JSON.stringify(input)) > -1
     );
-  };
-
-  const isNull = input => {
-    if (options.indexOf(null) === -1) return false;
-    return input === null;
-  };
-
-  const isEmptyString = input => {
-    if (options.indexOf("") === -1) return false;
-    return input === "";
-  };
-
-  const isEmptyObject = input => {
-    if (options.indexOf("{}") === -1) return false;
-    return JSON.stringify(input) === "{}";
-  };
-
-  const isEmptyArray = input => {
-    if (options.indexOf("[]") === -1) return false;
-    return input instanceof Array && input.length === 0;
-  };
-
-  const checkArguments = options => {
-    options.forEach((option, index) => {
-      if (supportedOptions.indexOf(option) === -1) options[index] = undefined;
-    });
-
-    return JSON.parse(JSON.stringify(options));
   };
 
   module.exports = exec;

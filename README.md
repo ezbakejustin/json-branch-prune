@@ -1,6 +1,6 @@
 # json-branch-prune
 This dependency free utility will remove branches from a json tree when the branch
-terminates in `undefined`, `null`, `""`, `{}`, and `[]`. With the exception of `undefined`
+terminates in `undefined`, `null`, `""`, `{}`, `[]`, or custom json elements. With the exception of `undefined`
 each of these terminators can be customized by passing the optional conditions argument.
 
 ### Installation
@@ -40,6 +40,7 @@ prune(input); // -> {}
 
 ##### Default functionality - nested
 ```
+let input = 
 {
   level1: {
     level1Item: "",
@@ -98,6 +99,7 @@ prune(input); // ->
 ##### Custom functionality - only prune empty objects
 ###### This will leave null, empty strings and empty arrays intact
 ```
+let input = 
 {
   null: null,
   emptyString: "",
@@ -105,10 +107,45 @@ prune(input); // ->
   emptyObject: {}
 }
 
-prune(input); // ->
+prune(input, ["{}"]); // ->
 {
   null: null,
   emptyString: "",
   emptyArray: []
 }
 ```
+
+##### Custom json element functionality - also prune a specific object when it is the only item in a node
+###### In this case, the element `negation: false` will be left in the object because it is not the sole member of that json branch
+
+```
+let input = 
+{
+  level1: {
+    level2: {
+      level3: {
+        foo: "bar"
+      },
+      negation: false,
+      level3List: [{ item: null }, { item: "" }, {}]
+    }
+  }
+}
+
+prune(input, [null, "", "[]", "{}", '{"negation":false}']); // ->
+{
+  level1: {
+    level2: {
+      level3: {
+        foo: "bar"
+      },
+      negation: false
+    }
+  }
+}
+```
+
+
+### Change log
+> **1.1.0**
+> - Added ability to provide custom json elements to be pruned

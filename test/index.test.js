@@ -271,4 +271,82 @@ describe("Prune tests", () => {
       }
     });
   });
+
+  it("Remove Null JSON Values", () => {
+    let result = instance({
+      value: "value",
+      test1: null,
+      test2: {
+        test3: null
+      }
+    });
+
+    assert.deepEqual(result, { value: "value" });
+  });
+
+  it("Remove Customized JSON Values Single Value", () => {
+    let result = instance(
+      {
+        custom: false
+      },
+      ['{"custom":false}']
+    );
+
+    assert.deepEqual(result, {});
+  });
+
+  it("Remove Customized JSON Values Single Value", () => {
+    let result = instance(
+      {
+        custom: false
+      },
+      ['{"custom":false}']
+    );
+
+    assert.deepEqual(result, {});
+  });
+
+  it("Remove Nested Custom Element", async () => {
+    let result = instance(
+      {
+        level1: {
+          level2: {
+            negation: false,
+            level3List: [{ item: null }, { item: "" }, {}]
+          }
+        }
+      },
+      [null, "", "[]", "{}", '{"negation":false}']
+    );
+
+    assert.deepEqual(result, {});
+  });
+
+  it("Remove Nested Custom Element with remainders", async () => {
+    let result = instance(
+      {
+        level1: {
+          level2: {
+            level3: {
+              foo: "bar"
+            },
+            negation: false,
+            level3List: [{ item: null }, { item: "" }, {}]
+          }
+        }
+      },
+      [null, "", "[]", "{}", '{"negation":false}']
+    );
+
+    assert.deepEqual(result, {
+      level1: {
+        level2: {
+          level3: {
+            foo: "bar"
+          },
+          negation: false
+        }
+      }
+    });
+  });
 });
