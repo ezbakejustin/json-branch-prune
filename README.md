@@ -1,4 +1,7 @@
 # json-branch-prune
+This dependency free utility will remove branches from a json tree when the branch
+terminates in `undefined`, `null`, `""`, `{}`, and `[]`. With the exception of `undefined`
+each of these terminators can be customized by passing the optional conditions argument.
 
 ### Installation
 ```
